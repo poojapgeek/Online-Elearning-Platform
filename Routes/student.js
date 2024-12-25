@@ -1,22 +1,15 @@
 const express=require('express');
 const router=express.Router();
-const {Category,validateCategory}=require('../Models/categoryModel.js')
+const {Students,validateStudent}=require('../Models/studentModel.js')
 
 
-// let category=[{
-//     id:1,name:'WebDevelopment'
-// },{
-//     id:2,name:'AppDevelopment'
-// },{
-//     id:3,name:'DataScience'   
-// }];
 router.get('/',async (req,res)=>{
-    let category=await Category.find();
-    res.send(category);
+    let student=await Students.find();
+    res.send(student);
 
 })
 router.post('/',async(req,res)=>{
-    const result = validateCategory(req.body.name);
+    const result = validateStudent(req.body);
 
     if (!result) {
         return res.status(500).send("Validation function returned undefined.");
@@ -25,17 +18,19 @@ router.post('/',async(req,res)=>{
     const { error } = result;
     if (error) return res.status(400).send(error.details[0].message);
 
-    const categories=new Category({
-        name:req.body.name
+    const student=new Students({
+        name:req.body.name,
+        isenrolled:req.body.isenrolled,
+        phone:req.body.phone
     })
 
         
     
-    await categories.save()
-    res.send(categories);
+    await student.save()
+    res.send(student);
 })
 router.put('/:id',async (req,res)=>{
-    const result = validateCategory(req.body.name);
+    const result = validateCategory(req.body);
 
     if (!result) {
         return res.status(500).send("Validation function returned undefined.");
@@ -45,27 +40,27 @@ router.put('/:id',async (req,res)=>{
     if (error) return res.status(400).send(error.details[0].message);
 
     // const categories=category.find(category=>category.id===parseInt(req.params.id));
-    const categories=await Category.findByIdAndUpdate(req.params.id,{name:req.body.name},{new:true});
-    if(!categories) res.status(404).send("cousre not found");
+    const student=await Students.findByIdAndUpdate(req.params.id,{name:req.body.name,isenrolled:req.body.isenrolled,phone:req.body.phone},{new:true});
+    if(!student) res.status(404).send("student not found");
 
     // categories.name=req.body.name;
-    res.send(categories);
+    res.send(student);
 })
 router.delete('/:id',async (req,res)=>{
-    const categories=await Category.findByIdAndDelete(req.params.id);
+    const student=await Students.findByIdAndDelete(req.params.id);
     // const categories=category.find(category=>category.id===parseInt(req.params.id))
-    if(!categories) res.status(404).send('course not found');
+    if(!student) res.status(404).send('student not found');
     // const index=category.indexOf(categories);
     // category.splice(index,1);
 
-    res.send(categories);
+    res.send(student);
 })
 router.get('/:id',async (req,res)=>{
     // const categories=category.find(category=>category.id===parseInt(req.params.id));
-    const categories=await Category.findById(req.params.id);
-    if(!categories) res.status(404).send("course not found");
-    res.send(categories);
+    const student=await Students.findById(req.params.id);
+    if(!student) res.status(404).send("student not found");
+    res.send(student);
 })
 
-
+    
 module.exports=router;
