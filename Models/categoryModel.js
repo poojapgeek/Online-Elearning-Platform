@@ -15,4 +15,5 @@ function validateCategory(categoryName) {
 }
 
 module.exports.Category=Category;
+module.exports.categorySchema=categorySchema
 module.exports.validateCategory=validateCategory;
